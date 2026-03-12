@@ -20,7 +20,7 @@ public abstract class Test0Base {
 	protected int BROKER_TESTPORT = 8080;
 	protected String BROKER_TESTHOST = "localhost";
 	
-	protected int RUNTIME = 10000; // time to allow test to execute
+	protected int RUNTIME = 10; // time to allow test to execute
 	
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -34,7 +34,7 @@ public abstract class Test0Base {
 		
 		// allow broker to reaching waiting for incoming connections
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(RUNTIME);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -45,10 +45,10 @@ public abstract class Test0Base {
 	public void tearDown() throws Exception {
 		
 		try {
-			Thread.sleep(10000); // let the system run for a while
-			broker.join();
+			Thread.sleep(RUNTIME); // let the system run for a while
+			//broker.join();
 			dispatcher.doStop();
-			dispatcher.join();
+			//dispatcher.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
