@@ -13,10 +13,10 @@ public class Storage {
 	// data structure for managing subscriptions
 	// maps from a topic to set of subscribed users
 	protected ConcurrentHashMap<String, Set<String>> subscriptions;
-	
+
 	// data structure for managing currently connected clients
 	// maps from user to corresponding client session object
-	
+
 	protected ConcurrentHashMap<String, ClientSession> clients;
 
 	public Storage() {
@@ -36,7 +36,7 @@ public class Storage {
 
 	// get the session object for a given user
 	// session object can be used to send a message to the user
-	
+
 	public ClientSession getSession(String user) {
 
 		ClientSession session = clients.get(user);
@@ -64,17 +64,17 @@ public class Storage {
 		// and remove client session for user from the storage
 		ClientSession session = clients.remove(user);
 
-		if (session != null){
+		if (session != null) {
 			session.disconnect();
 		}
 		Logger.log("Client session: " + clients.size());
-		
+
 	}
 
 	public void createTopic(String topic) {
 		subscriptions.putIfAbsent(topic, ConcurrentHashMap.newKeySet());
 		Logger.log("Topic: " + subscriptions.size());
-	
+
 	}
 
 	public void deleteTopic(String topic) {
@@ -82,27 +82,26 @@ public class Storage {
 		subscriptions.remove(topic);
 
 		Logger.log("Topic removed: " + topic);
-		
+
 	}
 
 	public void addSubscriber(String user, String topic) {
 
-		Set<String> subs = subscriptions.get(topic);
+		subscriptions.putIfAbsent(topic, ConcurrentHashMap.newKeySet());
 
-		if(subs != null){
-			subs.add(user);
-		}
-		Logger.log("Subscriber: " + topic + " : " + subs.size());
-		
+		Set<String> subs = subscriptions.get(topic);
+		subs.add(user);
+
+		Logger.log("Subscribers : " + topic + " : " + subs.size());
 	}
 
 	public void removeSubscriber(String user, String topic) {
 
 		Set<String> subs = subscriptions.get(topic);
 
-		if(subs != null){
+		if (subs != null) {
 			subs.remove(user);
+			Logger.log("Subscribers : " + topic + " : " + subs.size());
 		}
-		Logger.log("Subscriber: " + topic + " : " + subs.size());
 	}
 }
